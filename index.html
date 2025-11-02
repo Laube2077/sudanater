@@ -10,6 +10,7 @@
     <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body data-mode="start">
+ 
     <div class="background-container">
         <div class="bg-sky"></div>
         <div class="bg-clouds"></div>
@@ -17,66 +18,51 @@
         <div class="bg-curtain-left"></div>
         <div class="bg-curtain-right"></div>
     </div>
-
     <div class="page-wrapper">
         <header>
             <div class="logo">Sdanator</div>
-            <nav>
-                <span>言語</span>
-                <span>設定</span>
-                <span>ヘルプ</span>
-            </nav>
+            <nav><span>言語</span><span>設定</span><span>ヘルプ</span></nav>
         </header>
-
         <main>
             <div class="character-container">
-                <img id="character-image" src="https://en.akinator.com/assets/img/akitudes/akinator.png" alt="キャラクター" />
+                <img id="character-image" src="pose_think.png" alt="キャラクター" />
             </div>
-
             <div class="content-container">
-                <!-- スタート画面 -->
+                <!-- (変更なし...) -->
                 <div id="start-screen" class="screen">
-                    <h1>有名なキャラクターを思い浮かべてみて<br>プレイボタンを押してください</h1>
+                    <h1>有名な人物やキャラクターを思い浮かべて<br>プレイボタンを押してください</h1>
                     <button id="start-button" class="btn play-btn">プレイ</button>
                 </div>
-
-                <!-- ゲーム画面 -->
                 <div id="game-screen" class="screen">
                     <div class="progress-info">
                         <span>質問 No <span id="question-number">1</span></span>
-                        <div class="progress-container">
-                            <div id="progress-bar" class="progress-bar"></div>
-                        </div>
+                        <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
                     </div>
-                    <div class="speech-bubble-area">
-                        <p id="question-text">質問を考えている...</p>
-                    </div>
+                    <div class="speech-bubble-area"><p id="question-text">考え中...</p></div>
                     <div id="buttons" class="answer-buttons">
-                        <button class="btn">はい</button>
-                        <button class="btn">いいえ</button>
-                        <button class="btn">たぶんそう/部分的にそう</button>
-                        <button class="btn">たぶん違う/そうでもない</button>
+                        <button class="btn">はい</button><button class="btn">いいえ</button>
+                        <button class="btn">たぶんそう/部分的にそう</button><button class="btn">たぶん違う/そうでもない</button>
                         <button class="btn">わからない</button>
                     </div>
-                    <div class="nav-buttons">
-                      <button id="back-button" class="btn back-btn">戻る</button>
-                    </div>
+                    <div class="nav-buttons"><button id="back-button" class="btn back-btn">戻る</button></div>
                 </div>
-
-                <!-- 結果画面 -->
                 <div id="result-screen" class="screen">
                     <div id="guess-area">
-                        <h2>おまえが考えているのは...</h2>
+                        <h2 id="result-intro-text">あなたが考えているのは...</h2>
                         <div class="result-box">
-                            <!-- ▼▼▼ このimgタグが重要です ▼▼▼ -->
-                            <img id="wiki-thumbnail" src="" alt="Wikipediaサムネイル">
+                           
+                            <a id="wiki-link" href="#" target="_blank" rel="noopener noreferrer">
+                                <img id="wiki-thumbnail" src="" alt="サムネイル">
+                            </a>
                             <h3 id="result-title"></h3>
-                            <a id="wiki-link" href="#" target="_blank" rel="noopener noreferrer">Wikipediaで詳しく見る</a>
+                           
                         </div>
-                        <p>正解ですか？</p>
-                        <div class="result-buttons">
-                            <button id="yes-button" class="btn">はい</button>
-                            <button id="no-button" class="btn">いいえ</button>
+                        <div id="confirmation-buttons">
+                            <p>正解ですか？</p>
+                            <div class="result-buttons">
+                                <button id="yes-button" class="btn">はい</button>
+                                <button id="no-button" class="btn">いいえ</button>
+                            </div>
                         </div>
                     </div>
                     <div id="final-answer-area">
@@ -86,12 +72,10 @@
                 </div>
             </div>
         </main>
-
         <footer>
-            <p>&copy; 2025 Elokence. All rights reserved - Sdanator</p>
+            <p>&copy; 2025 Elokence. All rights reserved - スダネイター</p>
         </footer>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
