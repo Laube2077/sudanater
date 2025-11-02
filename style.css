@@ -207,7 +207,7 @@ body[data-mode="start"] .character-container { transform: scale(1.2); }
   main { flex-direction: column; }
   .character-container {
       flex: 0 0 auto;
-      height: 25vh;
+      height: 60vh;
       margin-bottom: 20px;
   }
   .character-container img { max-height: 100%; max-width: none; }
