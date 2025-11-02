@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>スダネイター！</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700&display=swap" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<body data-mode="start">
+    <div class="background-container">
+        <div class="bg-sky"></div>
+        <div class="bg-clouds"></div>
+        <div class="bg-floor"></div>
+        <div class="bg-curtain-left"></div>
+        <div class="bg-curtain-right"></div>
+    </div>
+
+    <div class="page-wrapper">
+        <header>
+            <div class="logo">Sdanator</div>
+            <nav>
+                <span>言語</span>
+                <span>設定</span>
+                <span>ヘルプ</span>
+            </nav>
+        </header>
+
+        <main>
+            <div class="character-container">
+                <img id="character-image" src="https://en.akinator.com/assets/img/akitudes/akinator.png" alt="キャラクター" />
+            </div>
+
+            <div class="content-container">
+                <!-- スタート画面 -->
+                <div id="start-screen" class="screen">
+                    <h1>有名なキャラクターを思い浮かべてみて<br>プレイボタンを押してください</h1>
+                    <button id="start-button" class="btn play-btn">プレイ</button>
+                </div>
+
+                <!-- ゲーム画面 -->
+                <div id="game-screen" class="screen">
+                    <div class="progress-info">
+                        <span>質問 No <span id="question-number">1</span></span>
+                        <div class="progress-container">
+                            <div id="progress-bar" class="progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="speech-bubble-area">
+                        <p id="question-text">質問を考えている...</p>
+                    </div>
+                    <div id="buttons" class="answer-buttons">
+                        <button class="btn">はい</button>
+                        <button class="btn">いいえ</button>
+                        <button class="btn">たぶんそう/部分的にそう</button>
+                        <button class="btn">たぶん違う/そうでもない</button>
+                        <button class="btn">わからない</button>
+                    </div>
+                    <div class="nav-buttons">
+                      <button id="back-button" class="btn back-btn">戻る</button>
+                    </div>
+                </div>
+
+                <!-- 結果画面 -->
+                <div id="result-screen" class="screen">
+                    <div id="guess-area">
+                        <h2>おまえが考えているのは...</h2>
+                        <div class="result-box">
+                            <!-- ▼▼▼ このimgタグが重要です ▼▼▼ -->
+                            <img id="wiki-thumbnail" src="" alt="Wikipediaサムネイル">
+                            <h3 id="result-title"></h3>
+                            <a id="wiki-link" href="#" target="_blank" rel="noopener noreferrer">Wikipediaで詳しく見る</a>
+                        </div>
+                        <p>正解ですか？</p>
+                        <div class="result-buttons">
+                            <button id="yes-button" class="btn">はい</button>
+                            <button id="no-button" class="btn">いいえ</button>
+                        </div>
+                    </div>
+                    <div id="final-answer-area">
+                        <h2 id="final-answer-text"></h2>
+                    </div>
+                    <button id="retry-button" class="btn play-btn">もう一度プレイ</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Elokence. All rights reserved - Sdanator</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
