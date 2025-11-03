@@ -7,304 +7,110 @@
   --color-gold: #f7ce3c;
   --color-bubble: #eef7fb;
 }
-
-body {
-  font-family: var(--font-main);
-  margin: 0;
-  color: var(--color-text-light);
-  overflow: hidden; /* 横スクロールを完全に禁止 */
-}
-
+body { font-family: var(--font-main); margin: 0; color: var(--color-text-light); overflow: hidden; }
 
 /* --- 背景 --- */
-.background-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  overflow: hidden;
-}
-
-/* 空のグラデーション */
-.bg-sky {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(ellipse at center, #75cff0 0%, #2989d8 60%, #0b3b64 100%);
-  z-index: 1;
-}
-
-/* アニメーションする雲 */
-@keyframes drift {
-  from { transform: translateX(-250px); }
-  to { transform: translateX(calc(100vw + 250px)); }
-}
-
-.bg-clouds {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  background-image:
-    url(cloud.png),
-    url(cloud.png),
-    url(cloud.png),
-    url(cloud.png);
-  background-repeat: no-repeat;
-  background-position: 10% 20%, 30% 60%, 65% 15%, 85% 50%;
-  background-size: 250px, 200px, 300px, 180px;
-  opacity: 0.6;
-  animation: drift 80s linear infinite;
-  z-index: 2;
-}
-
-/* 木の床 */
-.bg-floor {
-  position: absolute;
-  bottom: -20px; /* 少しはみ出させる */
-  left: 0;
-  width: 100%;
-  height: 35%;
-  background: 
-    repeating-linear-gradient(
-      -45deg, 
-      #8c603c, 
-      #8c603c 10px, 
-      #9d6c47 10px, 
-      #9d6c47 20px
-    );
-  border-top: 10px solid #5a3e29;
-  transform: perspective(150px) rotateX(25deg);
-  transform-origin: bottom;
-  z-index: 3;
-}
-
-/* カーテン */
-.bg-curtain-left, .bg-curtain-right {
-  position: absolute;
-  top: 0;
-  width: 25%;
-  min-width: 200px;
-  height: 100%;
-  background: url(curtain.png) top center / cover;
-  z-index: 4;
-}
+.background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+.bg-sky { position: absolute; width: 100%; height: 100%; background: radial-gradient(ellipse at center, #75cff0 0%, #2989d8 60%, #0b3b64 100%); z-index: 1; }
+@keyframes drift { from { transform: translateX(-250px); } to { transform: translateX(calc(100vw + 250px)); } }
+.bg-clouds { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url(cloud.png), url(cloud.png), url(cloud.png), url(cloud.png); background-repeat: no-repeat; background-position: 10% 20%, 30% 60%, 65% 15%, 85% 50%; background-size: 250px, 200px, 300px, 180px; opacity: 0.6; animation: drift 80s linear infinite; z-index: 2; }
+.bg-floor { position: absolute; bottom: -20px; left: 0; width: 100%; height: 35%; background: repeating-linear-gradient(-45deg, #8c603c, #8c603c 10px, #9d6c47 10px, #9d6c47 20px); border-top: 10px solid #5a3e29; transform: perspective(150px) rotateX(25deg); transform-origin: bottom; z-index: 3; }
+.bg-curtain-left, .bg-curtain-right { position: absolute; top: 0; width: 25%; min-width: 200px; height: 100%; background: url(curtain.png) top center / cover; z-index: 4; }
 .bg-curtain-left { left: 0; }
 .bg-curtain-right { right: 0; transform: scaleX(-1); }
 
-
 /* --- 全体レイアウト --- */
-.page-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  position: relative;
-  z-index: 10;
-}
-header, footer {
-  flex-shrink: 0;
-  padding: 15px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: rgba(0,0,0,0.2);
-}
+.page-wrapper { display: flex; flex-direction: column; min-height: 100vh; max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 10; }
+header, footer { flex-shrink: 0; padding: 15px 0; display: flex; justify-content: space-between; align-items: center; background-color: rgba(0,0,0,0.2); }
 .logo { font-size: 1.8em; font-weight: 700; }
 nav span { margin-left: 20px; cursor: pointer; }
 footer { justify-content: center; font-size: 0.8em; }
-
-main {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-.character-container {
-  flex: 0 0 35%;
-  text-align: center;
-  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-}
+main { flex-grow: 1; display: flex; align-items: center; width: 100%; position: relative; }
+.character-container { flex: 0 0 35%; text-align: center; transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; }
 .character-container img { max-width: 90%; height: auto; }
-
-.content-container {
-  flex: 1 1 65%;
-  position: relative;
-  min-height: 500px;
-}
+.content-container { flex: 1 1 65%; position: relative; min-height: 500px; }
 
 /* --- 画面切り替え --- */
-.screen {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.5s, visibility 0.5s;
-}
-
+.screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s; }
 body[data-mode="start"] #start-screen,
 body[data-mode="game"] #game-screen,
-body[data-mode="result"] #result-screen {
-  opacity: 1;
-  visibility: visible;
-}
+body[data-mode="result"] #result-screen { opacity: 1; visibility: visible; }
 
 /* --- スタート画面 --- */
 body[data-mode="start"] .character-container { transform: scale(1.2); }
 
-/* --- その他UIパーツ --- */
-.progress-info {
-  width: 90%; background: var(--color-blue-dark); border: 2px solid var(--color-text-light); border-radius: 20px; padding: 5px 15px; display: flex; align-items: center; margin-bottom: 20px;
-}
-.progress-container {
-  flex-grow: 1; height: 10px; background-color: rgba(0,0,0,0.3); border-radius: 10px; margin-left: 15px;
-}
-.progress-bar {
-  width: 0%; height: 100%; background-color: var(--color-gold); border-radius: 10px; transition: width 0.4s ease;
-}
-.speech-bubble-area {
-  width: 90%; background: var(--color-bubble); color: var(--color-blue-dark); border-radius: 15px; font-size: 1.5em; font-weight: 700; padding: 30px; min-height: 80px; box-sizing: border-box; margin-bottom: 20px;
-}
-.answer-buttons {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 90%;
-}
-.answer-buttons button:nth-child(3),
-.answer-buttons button:nth-child(4),
-.answer-buttons button:nth-child(5) {
-  grid-column: 1 / -1;
-}
-.btn {
-  font-family: var(--font-main); font-size: 1.1em; font-weight: 700; color: var(--color-text-light); background: linear-gradient(to bottom, #2b8dcf 0%, #1675bc 100%); border: 1px solid #105a96; border-radius: 10px; padding: 15px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 0 #0a385b;
-}
+/* --- UIパーツ --- */
+.progress-info { width: 90%; background: var(--color-blue-dark); border: 2px solid var(--color-text-light); border-radius: 20px; padding: 5px 15px; display: flex; align-items: center; margin-bottom: 20px; }
+.progress-container { flex-grow: 1; height: 10px; background-color: rgba(0,0,0,0.3); border-radius: 10px; margin-left: 15px; }
+.progress-bar { width: 0%; height: 100%; background-color: var(--color-gold); border-radius: 10px; transition: width 0.4s ease; }
+.speech-bubble-area { width: 90%; background: var(--color-bubble); color: var(--color-blue-dark); border-radius: 15px; font-size: 1.5em; font-weight: 700; padding: 30px; min-height: 80px; box-sizing: border-box; margin-bottom: 20px; position: relative; display: flex; align-items: center; justify-content: center; }
+.speech-bubble-area::before { content: ''; position: absolute; top: 50%; left: -20px; transform: translateY(-50%); border: 10px solid transparent; border-right-color: var(--color-bubble); }
+.answer-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 90%; }
+.answer-buttons button:nth-child(n+3) { grid-column: 1 / -1; }
+.btn { font-family: var(--font-main); font-size: 1.1em; font-weight: 700; color: var(--color-text-light); background: linear-gradient(to bottom, #2b8dcf 0%, #1675bc 100%); border: 1px solid #105a96; border-radius: 10px; padding: 15px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 0 #0a385b; }
 .btn:hover { background: linear-gradient(to bottom, #3eb1f0 0%, #2b8dcf 100%); }
 .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #0a385b; }
-.play-btn {
-  padding: 20px 40px; font-size: 1.5em;
-}
-.nav-buttons { margin-top: 15px; }
+.play-btn { padding: 20px 40px; font-size: 1.5em; }
+.nav-buttons { margin-top: 15px; display: flex; justify-content: center; gap: 10px; }
 .back-btn { background: #6c757d; box-shadow: 0 4px 0 #494f54; border-color: #494f54; }
-.result-box {
-  background: rgba(0,0,0,0.2); border: 2px solid var(--color-gold); border-radius: 10px; padding: 20px; margin: 15px 0; min-width: 80%;
-}
-#result-title {
-  color: var(--color-gold); font-size: 2em; margin: 0;
-}
+.result-box { background: rgba(0,0,0,0.2); border: 2px solid var(--color-gold); border-radius: 10px; padding: 20px; margin: 15px 0; min-width: 80%; }
+#result-title { color: var(--color-gold); font-size: 2em; margin: 0; }
 .result-buttons { display: flex; gap: 15px; margin-bottom: 20px; }
+#wiki-extract { display: none; font-size: 0.9em; font-weight: normal; color: #eee; margin-top: 10px; text-align: left; }
+
+/* --- サムネイルリンク --- */
+#wiki-link { display: none; margin-bottom: 15px; }
+#wiki-thumbnail { display: block; max-width: 150px; height: auto; border-radius: 8px; border: 3px solid var(--color-gold); transition: transform 0.2s ease, border-color 0.2s ease; margin: 0 auto; }
+#wiki-link:hover #wiki-thumbnail { transform: scale(1.05); border-color: #fff; }
+#wiki-thumbnail.secret { max-width: 250px; }
 
 /* --- レスポンシブ対応 --- */
 @media (max-width: 768px) {
-  main { flex-direction: column; }
+  main { position: relative; flex-grow: 1; display: flex; }
+
+
+  /* キャラクターは常に背景として画面下部に配置 */
   .character-container {
-      flex: 0 0 auto;
-      height: 60vh;
-      margin-bottom: 20px;
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100vh; height: 120%; /* キャラクターの高さを画面の60%に */
+    z-index: 1; pointer-events: none;
   }
-  .character-container img { max-height: 100%; max-width: none; }
-  .content-container { min-height: auto; width: 100%; }
-  .bg-curtain-left, .bg-curtain-right { width: 100px; }
+  .character-container img { height: 100%; width: auto; object-fit: contain; object-position: bottom; }
+
+  /* コンテンツエリアは常にキャラクターの手前に重なる */
+  .content-container {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 2;
+    display: flex; /* 中の要素をflexで制御 */
+    align-items: flex-end; /* 基本は下揃え */
+        padding-bottom: 5vh; /* 画面下部に5%の余白を追加 */
+  }
+
+  /* スタート画面のUIだけは上下中央に配置 */
+      body[data-mode="start"] .character-container {
+        position: relative; /* 通常のレイアウト */
+        height: 80vh;
+        flex: 0 0 auto; /* flexアイテムとしてのサイズを自動調整 */
+        width: 100%; /* 幅を100%に */
+        transform: none; /* PC用のtransformを解除 */
+        left: auto; /* PC用のleftを解除 */
+      }
+
+  /* ゲーム/結果画面のUIには背景色をつける */
+  body[data-mode="game"] #game-screen,
+  body[data-mode="result"] #result-screen {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    padding: 1em;
+    width: 100%;
+  }
+
+
+  .speech-bubble-area::before { display: none; }
   .speech-bubble-area { font-size: 1.2em; padding: 20px; }
   .answer-buttons { grid-template-columns: 1fr; }
+  header, footer { flex-shrink: 0; }
   header { font-size: 0.9em; }
   .logo { font-size: 1.5em; }
-}
-
-/* --- 吹き出しのしっぽ --- */
-.speech-bubble-area {
-  position: relative;
-}
-
-.speech-bubble-area::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -20px; /* 吹き出しの外、左側に配置 */
-  transform: translateY(-50%);
-  border: 10px solid transparent;
-  border-right-color: var(--color-bubble); /* 右向きの三角形を作成 */
-}
-
-/* --- 結果画面の追加スタイル --- */
-#final-answer-area {
-  display: none; /* 最初は非表示 */
-  text-align: center;
-}
-
-#final-answer-text {
-  color: var(--color-gold);
-  font-size: 2.5em;
-  margin-bottom: 20px;
-}
-
-#retry-button {
-  display: none; /* 最初は非表示 */
-}
-/* 差し替え前 */
-.speech-bubble-area {
-  width: 90%;
-  background: var(--color-bubble);
-  color: var(--color-blue-dark);
-  border-radius: 15px;
-  font-size: 1.5em;
-  font-weight: 700;
-  padding: 30px;
-  min-height: 80px;
-  box-sizing: border-box;
-  margin-bottom: 20px;
-  position: relative;
-}
-
-
-.speech-bubble-area {
-  width: 90%;
-  background: var(--color-bubble);
-  color: var(--color-blue-dark);
-  border-radius: 15px;
-  font-size: 1.5em;
-  font-weight: 700;
-  padding: 30px;
-  min-height: 80px;
-  box-sizing: border-box;
-  margin-bottom: 20px;
-  position: relative;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-}
-
-
-
-/* --- サムネイルを囲むリンクのスタイル --- */
-#wiki-link {
-  display: none; /* JSで表示を制御するための初期状態 */
-  margin-bottom: 15px;
-
-}
-
-/* --- サムネイル画像のスタイル --- */
-#wiki-thumbnail {
-  display: block; /* 画像が正しく表示されるように指定 */
-  max-width: 150px;
-  height: auto;
-  border-radius: 8px;
-  border: 3px solid var(--color-gold);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-/* カーソルを乗せたときの演出 */
-#wiki-link:hover #wiki-thumbnail {
-  transform: scale(1.05);
-  border-color: #fff;
 }
