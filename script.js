@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- (設定部分は変更なし) ---
+   
     const POSE_THINK = 'pose_think.png';
     const POSE_READY = 'pose_ready.png';
     const POSE_PRESENT = 'pose_present.png';
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const maxQuestions = 10;
     const regressionChance = 0.2;
 
-    // (HTML要素取得は変更なし)
+    
     const body = document.body;
     const startButton = document.getElementById('start-button');
     const questionNumberEl = document.getElementById('question-number');
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showSecretResult() { /* ... */ }
     async function showResult() { /* ... */ }
 
-    // ▼▼▼ ここからが今回の修正箇所です ▼▼▼
+    
 
     // 1つ前の質問に戻る共通関数
     function goBackOneQuestion() {
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             questionNumberEl.textContent = questionCount + 1;
             const progress = (questionCount / maxQuestions) * 100;
             progressBar.style.width = `${progress}%`;
-            changeCharacterImage(); // キャラクターのポーズも変える
+            changeCharacterImage(); // ポーズ変更
         }
     }
 
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         answerButtons.style.pointerEvents = 'none';
         const isRegression = Math.random() < regressionChance && questionCount > 0;
         if (isRegression) {
-            // 「無しだ！」の演出
+           
             questionText.textContent = "うーん、今の質問はナシだ！";
             characterImage.src = POSE_FRUSTRATED;
             setTimeout(() => {
@@ -120,16 +120,133 @@ document.addEventListener('DOMContentLoaded', () => {
     homeButton.addEventListener('click', resetToTitle);
     retryButton.addEventListener('click', resetToTitle);
 
-    // (これより下の関数定義は、念のため再掲します)
-    function isPersonArticle(pageData) { if (!pageData.categories) return false; const personKeywords = ['存命人物', '生', '没', '人物', '俳優', '女優', '歌手', '選手', '政治家', '芸人', 'タレント', '作家', '漫画家', '声優', '監督', '司会者', 'モデル', 'アイドル', 'アナウンサー']; return pageData.categories.some(category => personKeywords.some(keyword => category.title.includes(keyword))); }
-    async function fetchAndProcessArticle(maxRetries = 5) { let allFetchedArticlesWithThumbnail = []; for (let attempt = 1; attempt <= maxRetries; attempt++) { try { const apiUrl = 'https://ja.wikipedia.org/w/api.php?action=query&generator=random&grnnamespace=0&grnlimit=10&prop=pageimages|info|categories|extracts&exintro=true&explaintext=true&inprop=url&pithumbsize=200&format=json&origin=*&dummy=' + new Date().getTime(); const response = await fetch(apiUrl); if (!response.ok) throw new Error(`Network response was not ok. Status: ${response.status}`); const data = await response.json(); if (!data || !data.query || !data.query.pages) throw new Error('Invalid API response structure'); const pages = data.query.pages; const pagesArray = Object.values(pages); if (pagesArray.length === 0) throw new Error('API returned no articles'); pagesArray.forEach(page => { if (page.thumbnail && page.thumbnail.source) { allFetchedArticlesWithThumbnail.push(page); } }); const personArticle = allFetchedArticlesWithThumbnail.find(page => isPersonArticle(page)); if (personArticle) { return personArticle; } if (attempt < maxRetries) { await new Promise(resolve => setTimeout(resolve, 500)); } } catch (error) { console.error(`API取得失敗 (試行 ${attempt}回目)`, error); if (attempt === maxRetries) break; await new Promise(resolve => setTimeout(resolve, 1000)); } } if (allFetchedArticlesWithThumbnail.length > 0) { return allFetchedArticlesWithThumbnail[0]; } return null; }
-    function initializeGame() { questionCount = 0; questionHistory = []; answerButtons.style.pointerEvents = 'auto'; updateGameState(); }
-    function changeCharacterImage() { const randomIndex = Math.floor(Math.random() * randomPoses.length); characterImage.src = randomPoses[randomIndex]; }
-    function changeQuestion() { const secretQuestionChance = 0.06; let nextQuestion; if (Math.random() < secretQuestionChance) { nextQuestion = secretQuestion; } else { const randomIndex = Math.floor(Math.random() * questions.length); nextQuestion = questions[randomIndex]; } questionText.textContent = nextQuestion; questionHistory.push(nextQuestion); }
-    function updateGameState() { const progress = (questionCount / maxQuestions) * 100; progressBar.style.width = `${progress}%`; questionNumberEl.textContent = questionCount + 1; changeCharacterImage(); changeQuestion(); }
-    function showSecretResult() { body.dataset.mode = 'result'; characterImage.src = POSE_POINT; guessArea.style.display = 'block'; finalAnswerArea.style.display = 'none'; retryButton.style.display = 'none'; resultIntroText.textContent = "あなたが思い浮かべているのはスダトラマンだ！"; resultTitle.textContent = `${secretAnswer.title}`; wikiThumbnail.src = secretAnswer.thumbnailUrl; wikiThumbnail.classList.add('secret'); wikiLink.href = secretAnswer.linkUrl; wikiLink.style.display = 'block'; confirmationButtons.style.display = 'none'; retryButton.style.display = 'inline-block'; wikiExtract.style.display = 'none'; }
-    async function showResult() { body.dataset.mode = 'result'; resultTitle.textContent = '考え中...'; characterImage.src = POSE_POINT; guessArea.style.display = 'block'; finalAnswerArea.style.display = 'none'; retryButton.style.display = 'none'; wikiThumbnail.src = ''; wikiThumbnail.classList.remove('secret'); wikiLink.style.display = 'none'; wikiExtract.style.display = 'none'; wikiExtract.textContent = ''; resultIntroText.textContent = "あなたが思い浮かべているのは..."; const articleData = await wikiDataPromise; if (articleData) { confirmationButtons.style.display = 'block'; const { title, fullurl, extract } = articleData; resultTitle.textContent = `『${title}』`; if (extract) { const firstSentenceEnd = extract.indexOf('。'); if (firstSentenceEnd !== -1) { wikiExtract.textContent = extract.substring(0, firstSentenceEnd + 1); wikiExtract.style.display = 'block'; } } if (articleData.thumbnail && articleData.thumbnail.source) { wikiThumbnail.src = articleData.thumbnail.source; wikiLink.href = fullurl; wikiLink.style.display = 'block'; } } else { confirmationButtons.style.display = 'none'; resultTitle.textContent = 'エラーが発生しました。'; } }
-    yesButton.addEventListener('click', () => { guessArea.style.display = 'none'; finalAnswerText.textContent = "そんなわけないだろ！"; characterImage.src = POSE_ANGRY; finalAnswerArea.style.display = 'block'; retryButton.style.display = 'inline-block'; });
-    noButton.addEventListener('click', () => { guessArea.style.display = 'none'; finalAnswerText.textContent = "知ってるよ"; characterImage.src = POSE_CONFIDENT; finalAnswerArea.style.display = 'block'; retryButton.style.display = 'inline-block'; });
-
+    
+    function isPersonArticle(pageData) { 
+        if (!pageData.categories) return false; 
+        const personKeywords = ['存命人物', '生', '没', '人物', '俳優', '女優', '歌手', '選手', '政治家', '芸人', 'タレント', '作家', '漫画家', '声優', '監督', '司会者', 'モデル', 'アイドル', 'アナウンサー']; 
+        return pageData.categories.some(category => personKeywords.some(keyword => category.title.includes(keyword)));
+    }
+    
+    async function fetchAndProcessArticle(maxRetries = 5) { 
+        let allFetchedArticlesWithThumbnail = []; 
+        for (let attempt = 1; attempt <= maxRetries; 
+             attempt++) {
+            try {
+                const apiUrl = 'https://ja.wikipedia.org/w/api.php?action=query&generator=random&grnnamespace=0&grnlimit=10&prop=pageimages|info|categories|extracts&exintro=true&explaintext=true&inprop=url&pithumbsize=200&format=json&origin=*&dummy=' + new Date().getTime();
+                const response = await fetch(apiUrl); 
+                if (!response.ok) throw new Error(`Network response was not ok. Status: ${response.status}`); 
+                const data = await response.json(); 
+                if (!data || !data.query || !data.query.pages) throw new Error('Invalid API response structure'); 
+                const pages = data.query.pages; 
+                const pagesArray = Object.values(pages); 
+                if (pagesArray.length === 0) throw new Error('API returned no articles'); 
+                pagesArray.forEach(page => {
+                    if (page.thumbnail && page.thumbnail.source) {
+                        allFetchedArticlesWithThumbnail.push(page); 
+                    } }); 
+                const personArticle = allFetchedArticlesWithThumbnail.find(page => isPersonArticle(page)); 
+                if (personArticle) { 
+                    return personArticle; 
+                } 
+                if (attempt < maxRetries) { 
+                    await new Promise(resolve => setTimeout(resolve, 500)); 
+                } } 
+            catch (error) { 
+                console.error(`API取得失敗 (試行 ${attempt}回目)`, error); 
+                if (attempt === maxRetries) break; 
+                await new Promise(resolve => setTimeout(resolve, 1000)); 
+            } } 
+        if (allFetchedArticlesWithThumbnail.length > 0) { 
+            return allFetchedArticlesWithThumbnail[0]; 
+        } 
+        return null; 
+    }
+    function initializeGame() { 
+        questionCount = 0; 
+        questionHistory = []; 
+        answerButtons.style.pointerEvents = 'auto'; 
+        updateGameState(); 
+    }
+    function changeCharacterImage() { 
+        const randomIndex = Math.floor(Math.random() * randomPoses.length); 
+        characterImage.src = randomPoses[randomIndex]; 
+    }
+    function changeQuestion() { 
+        const secretQuestionChance = 0.06; 
+        let nextQuestion; 
+        if (Math.random() < secretQuestionChance) { 
+            nextQuestion = secretQuestion; 
+        } 
+        else { 
+            const randomIndex = Math.floor(Math.random() * questions.length); 
+            nextQuestion = questions[randomIndex]; 
+        } 
+        questionText.textContent = nextQuestion; 
+        questionHistory.push(nextQuestion); 
+    }
+    function updateGameState() { 
+        const progress = (questionCount / maxQuestions) * 100; 
+        progressBar.style.width = `${progress}%`; 
+        questionNumberEl.textContent = questionCount + 1; 
+        changeCharacterImage(); 
+        changeQuestion(); 
+    }
+    function showSecretResult() { 
+        body.dataset.mode = 'result'; 
+        characterImage.src = POSE_POINT; 
+        guessArea.style.display = 'block'; 
+        finalAnswerArea.style.display = 'none'; 
+        retryButton.style.display = 'none'; 
+        resultIntroText.textContent = "あなたが思い浮かべているのはスダトラマンだ！"; 
+        resultTitle.textContent = `${secretAnswer.title}`; 
+        wikiThumbnail.src = secretAnswer.thumbnailUrl; 
+        wikiThumbnail.classList.add('secret'); 
+        wikiLink.href = secretAnswer.linkUrl; 
+        wikiLink.style.display = 'block'; 
+        confirmationButtons.style.display = 'none'; 
+        retryButton.style.display = 'inline-block'; 
+        wikiExtract.style.display = 'none'; 
+    }
+    async function showResult() { 
+        body.dataset.mode = 'result'; 
+        resultTitle.textContent = '考え中...'; 
+        characterImage.src = POSE_POINT; 
+        guessArea.style.display = 'block'; 
+        finalAnswerArea.style.display = 'none'; 
+        retryButton.style.display = 'none'; 
+        wikiThumbnail.src = ''; 
+        wikiThumbnail.classList.remove('secret'); 
+        wikiLink.style.display = 'none'; 
+        wikiExtract.style.display = 'none'; 
+        wikiExtract.textContent = ''; 
+        resultIntroText.textContent = "あなたが思い浮かべているのは..."; 
+        const articleData = await wikiDataPromise; 
+        if (articleData) { 
+            confirmationButtons.style.display = 'block'; 
+            const { title, fullurl, extract } = articleData; 
+            resultTitle.textContent = `『${title}』`; 
+            if (extract) { const firstSentenceEnd = extract.indexOf('。'); 
+                          if (firstSentenceEnd !== -1) { wikiExtract.textContent = extract.substring(0, firstSentenceEnd + 1); 
+                                                        wikiExtract.style.display = 'block'; 
+                                                       } } 
+            if (articleData.thumbnail && articleData.thumbnail.source) { wikiThumbnail.src = articleData.thumbnail.source;
+                                                                        wikiLink.href = fullurl; 
+                                                                        wikiLink.style.display = 'block'; 
+                                                                       } } 
+        else { confirmationButtons.style.display = 'none'; 
+              resultTitle.textContent = 'エラーが発生しました。'; 
+             } }
+    yesButton.addEventListener('click', () => { guessArea.style.display = 'none'; 
+                                               finalAnswerText.textContent = "そんなわけないだろ！"; 
+                                               characterImage.src = POSE_ANGRY; 
+                                               finalAnswerArea.style.display = 'block'; 
+                                               retryButton.style.display = 'inline-block';
+                                              });
+    
+    noButton.addEventListener('click', () => { guessArea.style.display = 'none'; 
+                                              finalAnswerText.textContent = "知ってるよ"; 
+                                              characterImage.src = POSE_CONFIDENT; 
+                                              finalAnswerArea.style.display = 'block'; 
+                                              retryButton.style.display = 'inline-block'; 
+                                             });
 });

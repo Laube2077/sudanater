@@ -72,7 +72,7 @@ body[data-mode="start"] .character-container { transform: scale(1.2); }
   /* キャラクターは常に背景として画面下部に配置 */
   .character-container {
     position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 100vh; height: 120%; /* キャラクターの高さを画面の60%に */
+    width: 100vh; height: 120%; /* キャラクターの高さ */
     z-index: 1; pointer-events: none;
   }
   .character-container img { height: 100%; width: auto; object-fit: contain; object-position: bottom; }
@@ -83,8 +83,8 @@ body[data-mode="start"] .character-container { transform: scale(1.2); }
     width: 100%; height: 100%;
     z-index: 2;
     display: flex; /* 中の要素をflexで制御 */
-    align-items: flex-end; /* 基本は下揃え */
-        padding-bottom: 5vh; /* 画面下部に5%の余白を追加 */
+    align-items: flex-end; /* 下揃え */
+        padding-bottom: 5vh; /* 画面下部の余白 */
   }
 
   /* スタート画面のUIだけは上下中央に配置 */
@@ -97,7 +97,7 @@ body[data-mode="start"] .character-container { transform: scale(1.2); }
         left: auto; /* PC用のleftを解除 */
       }
 
-  /* ゲーム/結果画面のUIには背景色をつける */
+  /* UIの背景 */
   body[data-mode="game"] #game-screen,
   body[data-mode="result"] #result-screen {
     background: rgba(0, 0, 0, 0.1);
