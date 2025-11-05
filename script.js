@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         characterImage.src = randomPoses[randomIndex]; 
     }
     function changeQuestion() { 
-        const secretQuestionChance = 0.86; //スダトラ確率
+        const secretQuestionChance = 0.06; //スダトラ確率
         let nextQuestion; 
         if (Math.random() < secretQuestionChance) { 
             nextQuestion = secretQuestion; 
